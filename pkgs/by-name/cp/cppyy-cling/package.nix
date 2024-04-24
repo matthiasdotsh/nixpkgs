@@ -1,7 +1,7 @@
 { lib
 , fetchurl
 , fetchFromGitHub
-, python311Packages
+, python3Packages
 , fetchPypi
 , cmake
 , gcc
@@ -10,7 +10,7 @@
 , git
 }:
 
-python311Packages.buildPythonPackage rec {
+python3Packages.buildPythonPackage rec {
   pname = "cppyy-cling";
   version = "6.30.0";
 
@@ -21,10 +21,10 @@ python311Packages.buildPythonPackage rec {
 
   srcs = [
     (fetchFromGitHub {
-      owner = "wlav";
+      owner = "matthiasdotsh";
       repo = "cppyy-backend";
-      rev = "clingwrapper-1.15.2";
-      sha256 = "sha256-xX1tx3E+vvKj8lUAdqvKXcGAEAifN8oganlfBco7QQw=";
+      rev = "6d8d277bc9bd06bf8ea65bb8c1d74ef023b5fb8a";
+      sha256 = "sha256-vm/tpYUXLyuFD2FqpjcDORfzfNmPT3HRWjvM7hVTvgg=";
     })
 
     # cppyy-backend/cling depends on root
@@ -38,17 +38,30 @@ python311Packages.buildPythonPackage rec {
   nativeBuildInputs = [
     gcc
     glibcLocales
-    python311Packages.setuptools
-    python311Packages.wheel
-    python311Packages.pip
-    python311Packages.cmake
+    python3Packages.setuptools
+    python3Packages.wheel
+    python3Packages.pip
+    python3Packages.cmake
+    git
+    pkg-config
+    ];
+
+  propagatedBuildInputs = [
+    gcc
+    glibcLocales
+    python3Packages.setuptools
+    python3Packages.wheel
+    python3Packages.pip
+    python3Packages.cmake
     git
     pkg-config
   ];
 
-  dontUseCmakeConfigure = true;
 
-  buildPhase = ''
+  # unpackPhase = ''
+  # '';
+
+  patchPhase = ''
     # Copy root tarball to desired location
     # https://github.com/wlav/cppyy-backend/blob/master/cling/create_src_directory.py#L39
     mkdir -p source/cling/releases
@@ -57,20 +70,29 @@ python311Packages.buildPythonPackage rec {
     cd source/cling
     python setup.py egg_info
     python create_src_directory.py
-    python setup.py bdist_wheel
   '';
 
-  # installPhase = ''
+  dontUseCmakeConfigure = true;
+  # configurePhase = ''
   # '';
+
+  # buildPhase = ''
+  #   python setup.py bdist_wheel
+  # '';
+
+  #installPhase = ''
+  #   pip install dist/cppyy_cling-*
+  #'';
 
   # postFixup = ''
   # '';
 
+  # In the installCheck phase, ${python.interpreter} setup.py test is ran.
   # installCheck = ''
-  # '';
+  # ';
 
-  # doCheck = true;
-  # pythonImportsCheck = [ "cppyy_cling" ];
+  ##-- doCheck = true;
+  pythonImportsCheck = [ "cppyy_cling" ];
 
   meta = with lib; {
     homepage = "https://github.com/wlav/cppyy-backend/tree/master/cling";
