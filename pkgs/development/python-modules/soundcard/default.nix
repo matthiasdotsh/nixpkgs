@@ -1,6 +1,6 @@
 { buildPythonPackage
 , cffi
-, fetchFromGitHub
+, fetchPypi
 , lib
 , libpulseaudio
 , numpy
@@ -9,23 +9,17 @@
 }:
 
 let
-  # TODO: fix version and use according git/pypy tag
-  version = "1.2.3";
+  version = "0.4.3";
+  pname = "SoundCard";
 in
 
-buildPythonPackage (finalAttrs: {
-  pname = "soundcard";
-  inherit version;
+buildPythonPackage {
+  inherit pname version;
   pyproject = true;
 
-  # TODO: use fetchpypy
-  src = fetchFromGitHub {
-    # TODO: use
-    # inherit (finalAttrs) version;
-    owner = "bastibe";
-    repo = "SoundCard";
-    rev = "6dec3072ff9087c2f6b24f0f56359190eb2b8611";
-    hash = "sha256-d91fhgkjnRFamMIn7hmXuHZt6kGBysAhQq8IsZ/WqHs=";
+  src = fetchPypi {
+    inherit pname version;
+    hash = "sha256-QQg1UUuhCAmAPLmIfUJw85K1nq82WRW7lFFq8/ix0Dc=";
   };
 
   patchPhase = ''
@@ -53,7 +47,7 @@ buildPythonPackage (finalAttrs: {
     homepage = "https://soundcard.readthedocs.io";
     changelog = "https://soundcard.readthedocs.io/en/latest/#changelog";
     license = licenses.bsd3;
-    # TODO: Put yourself here as maintainer
-    maintainers = with maintainers; [ tfc ];
+    maintainers = with maintainers; [ matthiasdotsh ];
   };
-})
+}
+
