@@ -8,13 +8,10 @@
 , testers
 }:
 
-let
-  version = "0.4.3";
-  pname = "SoundCard";
-in
 
-buildPythonPackage {
-  inherit pname version;
+buildPythonPackage rec {
+  pname = "SoundCard";
+  version = "0.4.3";
   pyproject = true;
 
   src = fetchPypi {
@@ -22,17 +19,18 @@ buildPythonPackage {
     hash = "sha256-QQg1UUuhCAmAPLmIfUJw85K1nq82WRW7lFFq8/ix0Dc=";
   };
 
+  build-system = [ setuptools ];
+
+  dependencies = [
+    cffi
+    numpy
+  ];
+
+
   patchPhase = ''
     substituteInPlace soundcard/pulseaudio.py \
       --replace "'pulse'" "'${libpulseaudio}/lib/libpulse.so'"
   '';
-
-  nativeBuildInputs = [ setuptools ];
-
-  propagatedBuildInputs = [
-    cffi
-    numpy
-  ];
 
   # doesn't work because there are not many soundcards in the
   # sandbox. See VM-test
