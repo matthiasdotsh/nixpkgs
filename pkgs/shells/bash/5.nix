@@ -65,6 +65,14 @@ stdenv.mkDerivation rec {
     #   https://savannah.gnu.org/patch/index.php?10373
     # Had to fetch manually to workaround -p0 default.
     ./parallel.patch
+
+    # Add msys2 patches (modified to patch -p0):
+    #  https://github.com/msys2/MSYS2-packages/tree/847a9ff46e305b4df188fdd134a1666d0c61c72c/bash
+    ./0001-bash-4.4-cygwin.patch
+    ./0002-bash-4.3-msysize.patch
+    ./0005-bash-4.3-msys2-fix-lineendings.patch
+    ./0006-bash-4.3-add-pwd-W-option.patch
+    ./0007-fix-static-build.patch  # Duplicate of fix-static.path ?
   ];
 
   configureFlags = [
