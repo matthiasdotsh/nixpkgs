@@ -114,6 +114,13 @@ let
       DYNAMIC_ARCH = setDynamicArch false;
       USE_OPENMP = true;
     };
+
+    x86_64-windows = {
+      BINARY = 64;
+      TARGET = setTarget "SKYLAKEX";
+      DYNAMIC_ARCH = setDynamicArch true;
+      USE_OPENMP = false;
+    };
   };
 in
 
